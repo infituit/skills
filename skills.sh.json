@@ -23,6 +23,13 @@
         "skill-retrospective",
         "skills-sh-registration"
       ]
+    },
+    {
+      "title": "OpenCode",
+      "description": "Skills for configuring and customizing OpenCode.",
+      "skills": [
+        "custom-opencode"
+      ]
     }
   ]
 }
