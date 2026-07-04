@@ -10,6 +10,13 @@
       ]
     },
     {
+      "title": "Development Workflow",
+      "description": "Skills for managing development workflow tasks such as issues, branches, and pull requests.",
+      "skills": [
+        "create-github-pr"
+      ]
+    },
+    {
       "title": "Skill Maintenance",
       "description": "Skills for reviewing, improving, and preserving agent skill guidance.",
       "skills": [
