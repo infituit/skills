@@ -13,7 +13,8 @@
       "title": "Development Workflow",
       "description": "Skills for managing development workflow tasks such as issues, branches, and pull requests.",
       "skills": [
-        "create-github-pr"
+        "create-github-pr",
+        "helm-ghcr-oci-publish"
       ]
     },
     {
