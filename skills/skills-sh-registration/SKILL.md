@@ -17,18 +17,18 @@ Do not use this for ordinary skill authoring unless the goal includes skills.sh 
 
 ## Quick Start
 
-For `https://github.com/zouxingyuks/skills`:
+For `https://github.com/infituit/skills`:
 
 ```bash
-npx skills add zouxingyuks/skills --list
-npx skills add zouxingyuks/skills
+npx skills add infituit/skills --list
+npx skills add infituit/skills
 ```
 
 Expected page and badge:
 
 ```md
-https://skills.sh/zouxingyuks/skills
-[![skills.sh](https://skills.sh/b/zouxingyuks/skills)](https://skills.sh/zouxingyuks/skills)
+https://skills.sh/infituit/skills
+[![skills.sh](https://skills.sh/b/infituit/skills)](https://skills.sh/infituit/skills)
 ```
 
 ## Workflow

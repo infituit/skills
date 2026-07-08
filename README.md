@@ -1,2 +1,2 @@
 # Skills
-[![skills.sh](https://skills.sh/b/zouxingyuks/skills)](https://skills.sh/zouxingyuks/skills)
+[![skills.sh](https://skills.sh/b/infituit/skills)](https://skills.sh/infituit/skills)

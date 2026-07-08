@@ -60,10 +60,10 @@ Do not use this skill for:
 
 5. If explicitly authorized to create:
    - Verify `gh auth status`.
-   - Verify the target repository with `gh repo view` or `git remote -v`.
-   - Use `gh issue create` with the drafted title/body/labels.
-   - After creation, run `gh issue view <id> --json title,body,url,labels` to verify the created issue matches the draft.
-   - If shell escaping corrupts Markdown or paths, immediately repair with `gh issue edit --body-file -` and verify again.
+   - Resolve the exact target repository as `<owner/repo>` with `gh repo view <owner/repo> --json nameWithOwner` or `git remote -v`.
+   - Use `gh issue create --repo <owner/repo>` with the drafted title/body/labels.
+   - After creation, run `gh issue view <id> --repo <owner/repo> --json title,body,url,labels` to verify the created issue matches the draft.
+   - If shell escaping corrupts Markdown or paths, write the confirmed body to a concrete temporary file, repair with `gh issue edit <id> --repo <owner/repo> --body-file <path>`, and verify again. Do not rely on stdin shorthand for body repair commands.
 
 ## Workflow
 
@@ -181,9 +181,9 @@ If the user says to create it:
 
 ```bash
 gh auth status
-gh repo view --json nameWithOwner
-gh issue create --title "<title>" --body-file <body-file> --label "<label>"
-gh issue view <issue-number> --json title,body,url,labels
+gh repo view <owner/repo> --json nameWithOwner
+gh issue create --repo <owner/repo> --title "<title>" --body-file <body-file> --label "<label-1>" --label "<label-2>"
+gh issue view <issue-number> --repo <owner/repo> --json title,body,url,labels
 ```
 
 Return:

@@ -209,7 +209,8 @@ gh issue create \
   --repo <owner/repo> \
   --title "<title>" \
   --body "<body>" \
-  --label "<label1,label2>"
+  --label "<label1>" \
+  --label "<label2>"
 ```
 
 Immediately verify it:
