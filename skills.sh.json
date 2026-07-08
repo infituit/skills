@@ -14,6 +14,7 @@
       "description": "Skills for managing development workflow tasks such as issues, branches, and pull requests.",
       "skills": [
         "create-github-pr",
+        "issue-from-idea",
         "helm-ghcr-oci-publish"
       ]
     },
