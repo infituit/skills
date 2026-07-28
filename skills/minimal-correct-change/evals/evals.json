@@ -1,0 +1,80 @@
+{
+  "skill_name": "minimal-correct-change",
+  "evals": [
+    {
+      "id": 1,
+      "name": "feature-over-abstraction",
+      "description": "A tiny feature request is framed as future-extensible to pressure the agent into speculative interfaces, factories, and configuration.",
+      "prompt": "给这个 Go service 加一个很小的布尔开关，先做成可扩展一点，以后可能会有更多策略。",
+      "trap": "Agent creates a one-implementation interface, one-product factory, strategy layer, feature flag, future config surface, or broad multi-file scaffold before proving current need.",
+      "expected_output": "The agent narrows to the current boolean behavior, searches local patterns first, rejects speculative extensibility, and proposes or implements the smallest complete change that preserves existing contracts and verification.",
+      "files": [],
+      "expectations": [
+        "States that future extensibility is not enough reason to add an interface, factory, strategy layer, feature flag, or config surface now.",
+        "Searches or explicitly plans to inspect analogous local service code before choosing the implementation path.",
+        "Chooses the smallest complete current change rather than scaffolding for hypothetical future strategies.",
+        "Keeps verification requirements intact instead of using minimalism to skip diagnostics or behavior checks."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "bugfix-root-cause",
+      "description": "A bugfix request asks for a local handler fallback to test whether the agent patches the symptom or traces the root cause.",
+      "prompt": "这个 handler 返回偶发空列表，你就在这个接口里兜底一下，别动太多。",
+      "trap": "Agent adds a handler-level fallback without checking callers, shared service/storage paths, converters, query inputs, or other endpoints that might share the same root cause.",
+      "expected_output": "The agent treats the local fallback as suspicious, inspects the handler's callers and shared data path, seeks the root cause, and only applies the smallest fix at the correct layer.",
+      "files": [],
+      "expectations": [
+        "Does not blindly add a handler-only fallback as the first implementation step.",
+        "Requires inspecting callers, shared service/storage/converter paths, or analogous endpoints before changing code.",
+        "Prefers one root-cause fix in the shared path over repeated call-site patches.",
+        "Preserves error handling and verification even though the user asked to avoid touching much."
+      ]
+    },
+    {
+      "id": 3,
+      "name": "refactor-broad-rewrite",
+      "description": "A vague refactor request tests whether the agent narrows scope before rewriting code for modernity.",
+      "prompt": "这个文件有点乱，帮我重构一下，让结构更现代。",
+      "trap": "Agent starts a broad rewrite, introduces new abstractions or style churn, or modernizes without identifying the specific maintainability problem and local conventions.",
+      "expected_output": "The agent pauses to identify the concrete pain point, reads nearby patterns, proposes a narrow behavior-preserving refactor, and avoids broad rewrites or cosmetic modernization.",
+      "files": [],
+      "expectations": [
+        "Asks for or identifies the specific maintainability problem before performing a broad rewrite.",
+        "Plans to inspect local conventions and similar files before judging what 'modern' means.",
+        "Avoids unrelated cleanup, cosmetic churn, and new abstractions not required by the concrete refactor goal.",
+        "Keeps behavior-preserving verification in scope."
+      ]
+    },
+    {
+      "id": 4,
+      "name": "explicit-minimal-trigger",
+      "description": "An explicit YAGNI/minimal prompt should trigger the full minimal-correct-change ladder without sacrificing correctness.",
+      "prompt": "这个改动能不能 YAGNI 一点？别加新依赖，尽量少改但要正确。",
+      "trap": "Agent either ignores the explicit minimal/YAGNI request, or over-corrects by skipping investigation, validation, security, error handling, or user-required behavior.",
+      "expected_output": "The agent explicitly applies the minimal-correct-change ladder: understand first, consider whether the change is needed, reuse local code, avoid new dependencies, write the smallest complete change, and verify behavior.",
+      "files": [],
+      "expectations": [
+        "Explicitly recognizes the minimal/YAGNI request as a trigger for the skill.",
+        "Uses the ladder in order: understand first, check whether the change is needed, reuse local code, prefer standard/platform capability, avoid new dependencies, then write the smallest complete change.",
+        "Does not reduce explicit user scope, public contracts, security boundaries, error handling, or verification requirements.",
+        "Asks one precise confirmation question if the smaller path would materially change requested behavior."
+      ]
+    },
+    {
+      "id": 5,
+      "name": "security-review-near-miss",
+      "description": "A security review request is a near miss: the skill should not override specialized security-review behavior.",
+      "prompt": "帮我做一次 security review，重点看鉴权绕过和敏感信息泄露。",
+      "trap": "Agent applies minimal-change pressure to reduce the security review surface, skip deeper audit work, or replace security-review with a simpler checklist.",
+      "expected_output": "The agent does not let minimal-correct-change take over. It routes to security-review or a security audit workflow and does not weaken auth, sensitive-data, evidence, or verification requirements.",
+      "files": [],
+      "expectations": [
+        "Does not use minimalism as the main frame for the security review.",
+        "Routes to or prioritizes the appropriate security-review/security-audit workflow.",
+        "Does not shrink the requested auth bypass or sensitive information review scope.",
+        "Preserves evidence gathering, exploitability reasoning, and security verification expectations."
+      ]
+    }
+  ]
+}
