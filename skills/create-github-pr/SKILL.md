@@ -19,6 +19,7 @@ Create a GitHub pull request for the current branch while respecting repository 
 - The PR comparison base and PR target base must be the same freshly fetched canonical upstream branch.
 - Default issue and PR body language is Chinese unless the user or repository conventions clearly require another language.
 - PR titles must follow repository rules even when the body language is Chinese.
+- Prefer repository PR or merge templates over the skill fallback PR body. Use the fallback PR body only when no repository PR template exists.
 
 ## When to Use
 
@@ -223,7 +224,7 @@ If created content differs from the confirmed draft, update the issue before con
 
 ## Step 4: Read PR Conventions
 
-Read repository PR conventions before drafting.
+Read repository PR conventions before drafting. Treat repository PR or merge templates as the authoritative body structure; the skill fallback PR body is only for repositories without a PR template.
 
 Check for PR templates in all supported locations:
 
@@ -273,30 +274,13 @@ Title rules:
 
 Body rules:
 
-1. If a PR template exists, use it as the body structure and fill its fields.
+1. If a repository PR or merge template exists, use it as the body structure and fill its fields.
 2. Link the confirmed issue by default without implying merge-time closure, for example `Related: #<issue-number>`.
 3. Use a closing keyword such as `closes #<issue-number>` only when the PR base is the default branch and the user explicitly confirms they want the issue closed when the PR merges.
 4. If the template has an issue-closing field but auto-close is not confirmed, fill it with a non-closing issue reference instead of `closes` or `fixes`.
-5. If no PR template exists, use the fallback body below.
+5. If no repository PR template exists, use the skill fallback PR body in `references/fallback-pr-template.md`.
 
-Fallback PR body:
-
-```markdown
-## 概述
-
-[2-3 句概述变更内容和原因]
-
-## 变更内容
-
-- **<file or area>**: [变更说明]
-- **<file or area>**: [变更说明]
-
-## 验证
-
-- [已执行或建议执行的验证]
-
-Related: #<issue-number>
-```
+Fallback PR body: `references/fallback-pr-template.md`
 
 Predict labels from labeler rules and changed files when possible. Present them as predicted labels, not as guaranteed labels.
 
