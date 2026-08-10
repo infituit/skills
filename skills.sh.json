@@ -10,6 +10,13 @@
       ]
     },
     {
+      "title": "Agent Workflow Control",
+      "description": "Skills for keeping autonomous agent loops bounded and aligned with the main objective.",
+      "skills": [
+        "progress-stall-interrupt"
+      ]
+    },
+    {
       "title": "Development Workflow",
       "description": "Skills for managing development workflow tasks such as issues, branches, and pull requests.",
       "skills": [
