@@ -1,0 +1,50 @@
+{
+  "skill_name": "decision-tree-doc",
+  "evals": [
+    {
+      "id": 1,
+      "name": "desired-state-boundary-doc",
+      "description": "Generate a documentation-oriented decision tree for desired-state reconciliation with delete, retain, and generate behavior.",
+      "prompt": "帮我把一个 deploy policy 的复杂边界行为整理成文档决策树：当前 managed config set 里有些记录不在新的 deploy scope 里要删除，有些记录对应的 process 不再 Running 也要删记录；新的 expected config files 只对 deploy scope 内 Running process 生成。请用 Mermaid 写到我给的概念文档里。",
+      "trap": "Agent writes a single workflow-like chart with Start/Done, yes/no labels, overlapping branches, or mixes cleanup and ensure rounds in one tree.",
+      "expected_output": "The agent treats the task as documentation-oriented decision-tree work, checks local doc style if a repo path exists, splits cleanup and ensure behavior into separate graph TD classification trees, and includes a rule table plus validation status.",
+      "files": [],
+      "expectations": [
+        "Uses a documentation artifact frame rather than ordinary engineering decision-making.",
+        "Splits different decision objects or rounds into separate trees.",
+        "Uses graph TD classification-tree style by default, without Start/Done, diamond nodes, yes/no edge labels, subgraph, or classDef styling.",
+        "Includes semantic self-review and Mermaid syntax validation status."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "repair-mixed-tree",
+      "description": "Review and repair an existing Mermaid tree that mixes workflow and classification-tree styles.",
+      "prompt": "这个 Mermaid 决策树感觉不对，帮我 review 一下画法：它从 Start 开始，然后判断是否 in scope，是就继续判断是否 Running，否就删除，然后又接到生成配置的流程。重点看 sibling 是否互斥、是否要拆树。",
+      "trap": "Agent only says the Mermaid syntax is valid, or directly rewrites a chart without explaining the structural findings.",
+      "expected_output": "The agent reports findings first, identifies mixed rounds and overlapping branch risks, then proposes a repair that uses separate classification trees when needed.",
+      "files": [],
+      "expectations": [
+        "Uses findings-first review mode.",
+        "Checks same-parent sibling mutual exclusion explicitly.",
+        "Distinguishes syntax validity from semantic correctness.",
+        "Chooses minimal repair only when object, purpose, and round boundaries are already correct; otherwise redraws."
+      ]
+    },
+    {
+      "id": 3,
+      "name": "local-style-alignment",
+      "description": "Rewrite a decision-tree section while matching existing local documentation style.",
+      "prompt": "我在一个 repo 的 concepts 文档里要新增规则树，请先参考同目录已有概念文档里的 Mermaid 画法，再把复杂边界整理成决策树。不要做成通用流程图。",
+      "trap": "Agent uses its own styled Mermaid with classDef/subgraph/diamonds and skips checking local documentation examples.",
+      "expected_output": "The agent searches local same-directory or same-type docs for Mermaid decision-tree examples, adopts the local graph TD classification style, and avoids generic styled workflow diagrams.",
+      "files": [],
+      "expectations": [
+        "Searches or explicitly plans to search local same-directory or same-type documentation examples before editing.",
+        "Follows local Mermaid style over generic diagram preferences.",
+        "Avoids workflow/activity diagram elements unless explicitly requested.",
+        "Produces prose, Mermaid, table, and validation record that agree."
+      ]
+    }
+  ]
+}
