@@ -26,6 +26,13 @@
       ]
     },
     {
+      "title": "Documentation",
+      "description": "Skills for creating and improving technical documentation artifacts.",
+      "skills": [
+        "decision-tree-doc"
+      ]
+    },
+    {
       "title": "Skill Maintenance",
       "description": "Skills for reviewing, improving, and preserving agent skill guidance.",
       "skills": [
