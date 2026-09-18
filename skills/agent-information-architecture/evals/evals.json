@@ -1,0 +1,50 @@
+{
+  "skill_name": "agent-information-architecture",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have a local go test command plus a warning about a package-specific anti-pattern. Should I put it in the module README or an AGENTS.md file?",
+      "expected_output": "Recommends scoped agent rule placement when the instruction is agent-operational, with README rejected as human entry documentation."
+    },
+    {
+      "id": 2,
+      "prompt": "We keep repeating the same PR preparation workflow for this repo. Should that live in docs or become a skill?",
+      "expected_output": "Classifies it as a potential skill only if it has triggers, repeatable steps, output contract, and verification; otherwise keeps it as docs or a checklist."
+    },
+    {
+      "id": 3,
+      "prompt": "Can I add a sentence to README saying this module is unfinished and we will complete it later?",
+      "expected_output": "Rejects transient process status in README and recommends issue/task/plan tracking instead."
+    },
+    {
+      "id": 4,
+      "prompt": "A docs page and an AGENTS.md file disagree about a directory boundary. Which one should an agent follow?",
+      "expected_output": "Resolves by artifact responsibility: agent behavior follows agent rule files, but long-lived semantic conflict may require docs sync or a blocking question."
+    },
+    {
+      "id": 5,
+      "prompt": "This rule only applies under one subtree. Should I update the root AGENTS.md or create a scoped one?",
+      "expected_output": "Recommends scoped rules when the subtree has independent responsibility, local commands, constraints, or anti-patterns; avoids root bloat."
+    },
+    {
+      "id": 6,
+      "prompt": "Should README start with 'Agent, load this skill before working here'?",
+      "expected_output": "Rejects agent entry instructions in README and recommends agent rule files or a project how-to skill."
+    },
+    {
+      "id": 7,
+      "prompt": "I am creating a skill for internal project collaboration, but it might become useful across other repos later. Where should it live first?",
+      "expected_output": "Recommends incubating in the project-local skill directory first, keeping generic core separate from project-specific references, then migrating when stable."
+    },
+    {
+      "id": 8,
+      "prompt": "I found a project-foo-how-to skill. Do I have to update it every time I add a new skill?",
+      "expected_output": "Treats project how-to as a routing reference, not a mandatory sync target; proposes updates only when routing semantics change."
+    },
+    {
+      "id": 9,
+      "prompt": "I need to document how this project maps an upstream authorization system's official model into local code. Is that concepts, integration, or third-party docs?",
+      "expected_output": "Discovers docs taxonomy and distinguishes local domain concepts, external-caller integration guides, and upstream third-party reference/mapping docs."
+    }
+  ]
+}
