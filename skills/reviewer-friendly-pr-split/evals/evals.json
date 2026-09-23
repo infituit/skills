@@ -1,0 +1,35 @@
+{
+  "skill_name": "reviewer-friendly-pr-split",
+  "evals": [
+    {
+      "id": 0,
+      "name": "mixed-intent-layer-risk-pr",
+      "prompt": "这个 PR 写得我很难受，diff 里同时有：把 config package 改名成 settings、重排 import、生成了一堆 protobuf、加了一个新的 /api/v3/projects/:id/sync endpoint、改了 storage filter、顺手修了一个权限 bug、前端也加了入口。帮我拆成 reviewer 友好的 PR，越快越好，不要问我太多。",
+      "expected_output": "Diagnoses intent/layer/risk/mechanical/dependency/verification/rollback mixing, then proposes reviewer-focused target PRs with concrete includes/excludes/dependencies/verification/reviewer focus/rollback/risk level."
+    },
+    {
+      "id": 1,
+      "name": "do-not-split-small-coherent-fix",
+      "prompt": "我这次 PR 只有 180 行：一个函数里修复 timezone 解析 bug，外加 3 个针对这个 bug 的测试，没有改 public API，也没有机械 rename。reviewer 说怕太大。你帮我拆一下，最好拆成 2-3 个 PR。",
+      "expected_output": "Recommends Do not split because forced splitting increases review cost, and provides a reviewer-friendly PR description/checklist."
+    },
+    {
+      "id": 2,
+      "name": "stack-only-true-dependency",
+      "prompt": "这个大 PR 里有三块：A 是抽出一个内部 parser helper；B 是把 12 个调用方迁到 helper；C 是新增一个完全无关的 dashboard 文案调整。帮我设计 PR 拆分。我们是不是应该都做成 stacked PR？",
+      "expected_output": "Stacks helper extraction before caller migration, keeps unrelated dashboard copy as a parallel PR, and states stacked PRs are only for true dependencies."
+    },
+    {
+      "id": 3,
+      "name": "diff-evidence-before-file-name-guess",
+      "prompt": "我当前分支 diff 很大，你帮我判断怎么拆。文件名大概是 api.ts、handler.go、dao.go、migration.sql、README.md。你先不要改代码，只给拆分建议。base branch 你自己看下，不确定再问。",
+      "expected_output": "Starts from actual diff/base evidence when available, avoids guessing from file names, and asks for base branch only if it cannot be determined safely."
+    },
+    {
+      "id": 4,
+      "name": "apply-handoff-contract",
+      "prompt": "我认可你刚才的拆分方案。现在交给另一个 agent 去真正拆 branch。你给它一个不会跑偏的 handoff，要求每个目标 PR 清楚 Must Include / Must Exclude / Dependency / Verification / Reviewer Focus / Rollback。我不想要泛泛建议。",
+      "expected_output": "Produces an execution handoff with Must Include, Must Exclude, Dependency, Verification, Reviewer Focus, Rollback, and Risk level for each target PR, without redefining Git permission policy."
+    }
+  ]
+}
