@@ -30,6 +30,7 @@
       "title": "Documentation",
       "description": "Skills for creating and improving technical documentation artifacts.",
       "skills": [
+        "audience-boundary",
         "decision-tree-doc"
       ]
     },
