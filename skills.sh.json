@@ -46,9 +46,11 @@
     },
     {
       "title": "OpenCode",
-      "description": "Skills for configuring and customizing OpenCode.",
+      "description": "Skills for configuring, customizing, and developing plugins for OpenCode.",
       "skills": [
-        "custom-opencode"
+        "custom-opencode",
+        "opencode-plugin-how-to",
+        "opencode-plugin-doc-finder"
       ]
     }
   ]
