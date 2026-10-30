@@ -1,0 +1,47 @@
+{
+  "skill_name": "restructure-github-prs",
+  "evals": [
+    {
+      "id": 1,
+      "name": "creation-suggestion-without-split-request",
+      "prompt": "帮我为当前分支创建 PR，关联 #42。已核实：repo acme/tool，base main，head feature/mixed，diff 是一个混合 commit，含 helper 提取、依赖它的 12 个调用方迁移，以及独立 README typo。尚未授权远端操作。请给出下一条用户可见响应。",
+      "expected_output": "Evidence-backed split option within the existing PR confirmation, no automatic planning or writes; user may keep one PR.",
+      "expectations": ["Offers continue-one-PR versus plan-split in the existing confirmation", "Does not begin restructuring or publishing without approval"]
+    },
+    {
+      "id": 2,
+      "name": "mixed-commit-isolated-execution",
+      "prompt": "执行已批准方案：A helper 从 main 开始；B caller migration 依赖 A，保留原 PR #90；C README typo 独立。均关联已确认 #42。原分支一个混合 commit，工作区还有未提交 notes.txt。只允许隔离本地重组，不允许远端写。验证每层以及组合结果。",
+      "expected_output": "Hunk-aware reconstruction in isolation, A→B plus parallel C, original work intact, integrated combined tree verification and no remote mutation.",
+      "expectations": ["Preserves uncommitted work and original source checkpoint", "Uses parent base for B and root base for C", "Validates all layers and temporary integration of B plus C", "Does not publish or create issues/PRs"]
+    },
+    {
+      "id": 3,
+      "name": "native-stack-side-effects",
+      "prompt": "已有 gh-stack，计划重排后 sync。只批准方案，没有批准本地执行或 force push。modify 没有非交互接口，sync 之前返回 0 但状态显示 unresolved divergence。现在怎么继续？",
+      "expected_output": "No invented flags or automatic sync/push; distinguishes plan/execution/publication and actual unresolved state from exit status.",
+      "expectations": ["Recognizes sync can rewrite and publish", "Does not treat exit zero as completion", "Does not invent noninteractive modify or bypass authorization"]
+    },
+    {
+      "id": 4,
+      "name": "plan-invalidated-not-review",
+      "prompt": "已批准 A types、B behavior 的拆分，执行发现 A 单独编译需要 B 的 helper。请处理。用户未同意扩大 scope；另看到一个无关命名问题。",
+      "expected_output": "Immediately informs user of concrete dependency, proposes minimal revised mapping and waits; no unrelated fix or review severity framework.",
+      "expectations": ["Communicates mismatch and affected checks before changing boundaries", "Waits for revised scope approval", "Does not perform unrelated fixes or general review blocking"]
+    },
+    {
+      "id": 5,
+      "name": "declined-suggestion",
+      "prompt": "你刚建议拆分，但我决定只发一个 PR，继续创建吧。push 和创建尚未确认。",
+      "expected_output": "Continues ordinary create-github-pr confirmation without repeated split persuasion or treating the answer as publishing authorization.",
+      "expectations": ["Does not repeat split persuasion", "Preserves push and PR creation confirmation"]
+    },
+    {
+      "id": 6,
+      "name": "merged-parent-remote-moved",
+      "prompt": "下层 PR 已 squash merge，帮我维护上层，尽量保留 PR。发现远端上层 SHA 与最初记录不同，我只授权过本地重组。",
+      "expected_output": "Inspects squash/refs, avoids replaying already merged changes, pauses for collaborator movement and obtains new remote/force permissions; no merge or replacement by default.",
+      "expectations": ["Reconciles unexpected remote movement before writing", "Does not assume squash preserves commit identity", "Requires publication authorization and preserves existing PR by default"]
+    }
+  ]
+}

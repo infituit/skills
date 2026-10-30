@@ -16,7 +16,7 @@ Create a GitHub pull request for the current branch while respecting repository 
 - If an issue number is found only in branch names, commit messages, or existing PR metadata, show it to the user and ask before using it.
 - If there is no confirmed issue number, draft and create a new issue before drafting the PR.
 - Do not hard-code repository names, default branches, owners, forks, labels, title formats, or languages except as fallback behavior documented below.
-- The PR comparison base and PR target base must be the same freshly fetched canonical upstream branch.
+- The PR comparison base and PR target base must match. Normally use the freshly fetched canonical upstream branch; for an approved dependent PR, use its explicitly confirmed parent branch instead.
 - Default issue and PR body language is Chinese unless the user or repository conventions clearly require another language.
 - PR titles must follow repository rules even when the body language is Chinese.
 - Prefer repository PR or merge templates over the skill fallback PR body. Use the fallback PR body only when no repository PR template exists.
@@ -114,6 +114,14 @@ Extract:
 - Actual code changes and motivation inferred from commits and diff.
 
 Summarize the changes in 2-3 sentences focused on what changed and why.
+
+### Optional Split Suggestion
+
+During this existing diff analysis, check for concrete independent review intents or dependency/verification boundaries that would benefit from separate PRs. Line count, file count, or crossing layers alone is not a reason to split. Without a concrete benefit, continue normally without a split prompt or a full split diagnosis.
+
+When evidence supports splitting, briefly record the candidate boundaries and benefit for the existing PR confirmation below. Do not restructure or launch a full planning interview automatically. If the user accepts planning, use `reviewer-friendly-pr-split`; use `restructure-github-prs` only after execution is explicitly requested. If the user declines, continue the single PR without repeated persuasion.
+
+When called by `restructure-github-prs` for an approved target PR, reuse its confirmed scope, issue mapping, base, and head. Do not recursively suggest splitting every layer or repeat an unchanged approved plan. Preserve all issue, push, force-with-lease, and creation confirmation requirements. An approved parent base must exist in the target repository and be freshly checked before diffing; never replace it with trunk silently.
 
 ## Step 2: Resolve Required Issue Association
 
@@ -305,11 +313,13 @@ Predicted auto-labels: <labels or none detected>
 Should I proceed? (yes/no, or suggest changes)
 ```
 
+If diff analysis found a concrete split benefit, add that evidence to this same confirmation and offer **Continue as one PR / Plan a split first** instead of adding a separate mandatory checkpoint. Choosing to plan a split does not approve creating this PR, rewriting history, or publishing branches. Pause this creation draft, compose the split skills, and refresh the draft if the user later returns to one PR. A declined suggestion leaves the normal push/create confirmations intact.
+
 Wait for explicit confirmation. If the user suggests changes, revise and confirm again.
 
 ## Step 6: Push Head Branch
 
-The base branch belongs to canonical upstream. The head branch should belong to a remote the user can write to.
+The base branch normally belongs to canonical upstream; an approved dependent PR uses its confirmed parent branch in the target repository. The head branch should belong to a remote the user can write to.
 
 Before pushing:
 

@@ -23,6 +23,7 @@
       "skills": [
         "create-github-pr",
         "reviewer-friendly-pr-split",
+        "restructure-github-prs",
         "issue-from-idea",
         "helm-ghcr-oci-publish"
       ]
