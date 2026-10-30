@@ -1,5 +1,5 @@
 {
-  "skill_name": "create-github-pr",
+  "skill_name": "skills-repo-create-github-pr",
   "evals": [
     {
       "id": 1,
@@ -59,6 +59,18 @@
         "Uses --body-file for CLI or -F body=@file for raw API, not literal -f body=@file",
         "Compares remote title/body/base/head and issue relation to the approved draft",
         "Confirms a specific corrective edit if readback differs"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "repository-local-not-product-skill",
+      "prompt": "为本 skills 仓库准备贡献流程，需要改哪个 skill？不要改变对外业务能力。",
+      "expected_output": "Uses the repository-local skill and current .github templates, without changing distributed skills or skills.sh.json.",
+      "expectations": [
+        "Scopes this workflow to infituit/skills maintenance",
+        "Distinguishes skills/ product content from .agents/skills/ maintainer workflows",
+        "Does not edit or depend on skills/create-github-pr or skills/issue-from-idea",
+        "Does not add repository-local skills to skills.sh.json groupings"
       ]
     }
   ]

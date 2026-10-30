@@ -16,7 +16,6 @@ Default output is an issue draft. Creating the GitHub Issue is an external side 
 Use this skill when the user already has a direction or goal and needs help making it issue-ready.
 
 Good triggers:
-
 - "帮我构建一个 issue"
 - "把这个需求落成 GitHub issue"
 - "这个 feature 帮我写成 issue"
@@ -25,7 +24,6 @@ Good triggers:
 - "用项目模板来写 issue"
 
 Do not use this skill for:
-
 - Early brainstorming where the user does not yet know the goal
 - Implementation work after an issue already exists
 - PR creation or branch/commit workflows
@@ -43,12 +41,7 @@ Do not use this skill for:
    - Search for analogous implementations, naming, labels, terminology, and module boundaries.
    - Do not conduct a detached product interview while ignoring the codebase.
 
-3. Check for duplicates before offering creation.
-   - Search existing issues using the concrete behavior and affected area.
-   - Show a plausible existing or long-lived tracking issue and ask whether to reuse it; similarity alone is not approval to link, edit, or close it.
-   - If reusing an issue for a PR, use a non-closing relation for umbrella or partial delivery and leave PR association to `create-github-pr`.
-
-4. Ask only template-driven and project-driven questions.
+3. Ask only template-driven and project-driven questions.
    - Fill what can be inferred from repository facts.
    - Ask about gaps that materially affect issue accuracy:
      - scope and non-scope
@@ -60,35 +53,33 @@ Do not use this skill for:
      - labels/category/template choice
    - Prefer one focused question batch over a long generic questionnaire.
 
-5. Default to draft only.
+4. Default to draft only.
    - Produce the issue title and body in the repository's template format.
    - Include labels only if the template or repo conventions support them.
    - Do not create the issue unless the user explicitly authorizes creation after reviewing the draft.
 
-6. If explicitly authorized to create:
+5. If explicitly authorized to create:
    - Verify `gh auth status`.
    - Resolve the exact target repository as `<owner/repo>` with `gh repo view <owner/repo> --json nameWithOwner` or `git remote -v`.
    - Use `gh issue create --repo <owner/repo>` with the drafted title/body/labels.
    - After creation, run `gh issue view <id> --repo <owner/repo> --json title,body,url,labels` to verify the created issue matches the draft.
-   - Use a concrete temporary file and `--body-file` for multiline Markdown. If readback differs, show the difference and confirm the specific corrective `gh issue edit` before writing, then verify again. If creation fails ambiguously, inspect remote state before retrying to avoid duplicates. Do not rely on stdin shorthand for body repair commands.
+   - If shell escaping corrupts Markdown or paths, write the confirmed body to a concrete temporary file, repair with `gh issue edit <id> --repo <owner/repo> --body-file <path>`, and verify again. Do not rely on stdin shorthand for body repair commands.
 
 ## Workflow
 
 ### 1. Classify the Issue Type
 
 Choose the repository template that best matches the user's intent:
-
 - feature request: new capability, behavior enhancement, workflow improvement
 - bug report: existing behavior is wrong or broken
 - task/chore: maintenance, refactor, docs, infra, release work
 - question/discussion: unclear ask, needs design decision before implementation
 
-If multiple templates could apply, explain the tradeoff and ask the user to choose. Prefer a discussion/proposal form for unresolved design choices, a bug form for incorrect existing behavior, and a feature form for a concrete new capability. Do not force routine maintenance into a feature form merely to supply a PR issue number.
+If multiple templates could apply, explain the tradeoff and ask the user to choose.
 
 ### 2. Extract Template Contract
 
 For the selected template, capture:
-
 - required title prefix
 - default labels
 - required checkboxes
@@ -99,16 +90,11 @@ For the selected template, capture:
 
 Keep the final issue aligned to this contract. Do not invent sections that fight the template unless the template has no place for important information.
 
-For YAML forms, render input labels as Markdown headings in field order, use the exact dropdown option text, and include required fields. Do not submit the YAML itself as the body. Confirm required checkboxes from evidence or the user; never invent reproduction, environment, logs, or a claim that documentation was read. Keep missing required facts as author-facing questions, not a supposedly complete issue.
-
-Check `config.yml`: if blank issues are disabled and no form fits, ask which form to use rather than silently bypassing the chooser. Verify default labels exist before submission; report missing labels and ask before creating or substituting them. See `references/issue-form-delivery.md` for the draft and submission checklist.
-
 ### 3. Ground in Project Facts
 
 Before writing the draft, gather enough repository facts to avoid hallucinated issue content.
 
 Look for:
-
 - affected modules and paths
 - existing implementations or similar behavior
 - platform-specific splits
@@ -118,7 +104,6 @@ Look for:
 - existing labels or issue conventions when visible
 
 Convert findings into precise issue language:
-
 - "affects `tools/internal/installer/node/nodeinstaller`" is better than "installer code"
 - "exclude `precheck`, `stop`, `uninstall`, `checkdeploy`" is better than "not all flows"
 - "Windows uses `agent.exe -v`" is better than "also support Windows"
@@ -128,14 +113,12 @@ Convert findings into precise issue language:
 Ask questions only after repository grounding.
 
 Good questions:
-
 - "Template has a feature category dropdown. Should this be `Installation & Deployment` or `Backend`?"
 - "I found install/start/restart flows. Should upgrade be included too?"
 - "If the diagnostic command fails, should the operation fail or only warn?"
 - "Should this issue request parsing/storing the result, or only logging raw output?"
 
 Bad questions:
-
 - "What is the background?"
 - "What is the goal?"
 - "What are the acceptance criteria?"
@@ -181,7 +164,6 @@ For repository issue forms, follow the exact form sections instead.
 ### 6. Review Before Creation
 
 Before offering creation, check:
-
 - Title follows repo prefix/category conventions.
 - Body fills every required template field.
 - Scope and non-scope are explicit.
@@ -205,7 +187,6 @@ gh issue view <issue-number> --repo <owner/repo> --json title,body,url,labels
 ```
 
 Return:
-
 - issue URL
 - title
 - labels
@@ -214,7 +195,6 @@ Return:
 ## Quality Bar
 
 A good issue produced by this skill:
-
 - matches the repository's actual issue template
 - reflects real project structure, not generic assumptions
 - contains enough context for a maintainer to understand why it matters
@@ -225,15 +205,15 @@ A good issue produced by this skill:
 
 ## Common Mistakes
 
-| Mistake                                                          | Correction                                                    |
-| ---------------------------------------------------------------- | ------------------------------------------------------------- |
-| Writing a generic issue without reading `.github/ISSUE_TEMPLATE` | Always inspect templates first when available.                |
-| Asking broad product questions before reading the repo           | Ground in project files and ask only missing pieces.          |
-| Treating "build an issue" as permission to create one            | Default to draft; creation needs explicit authorization.      |
-| Ignoring labels/title prefixes from issue forms                  | Extract and follow template metadata.                         |
-| Over-implementing in the issue                                   | Keep implementation notes optional and scoped.                |
-| Losing user corrections                                          | Update scope, non-scope, and acceptance criteria immediately. |
-| Forgetting post-create verification                              | Always view the created issue and compare with the draft.     |
+| Mistake | Correction |
+| --- | --- |
+| Writing a generic issue without reading `.github/ISSUE_TEMPLATE` | Always inspect templates first when available. |
+| Asking broad product questions before reading the repo | Ground in project files and ask only missing pieces. |
+| Treating "build an issue" as permission to create one | Default to draft; creation needs explicit authorization. |
+| Ignoring labels/title prefixes from issue forms | Extract and follow template metadata. |
+| Over-implementing in the issue | Keep implementation notes optional and scoped. |
+| Losing user corrections | Update scope, non-scope, and acceptance criteria immediately. |
+| Forgetting post-create verification | Always view the created issue and compare with the draft. |
 
 ## Example
 
@@ -241,7 +221,6 @@ User intent:
 "现在 Agent 要区分 inner 和 ce，但是当前没有好方式拿到这个信息。我们想在安装工具里固定打一下 `agent -v`，只打日志不解析。precheck 不用。帮我落成 issue。"
 
 Repository facts found:
-
 - Feature template uses title prefix `[FEATURE]: ` and label `kind/features`.
 - Affected area is `tools/internal`.
 - Fixed flows are install, upgrade, start, restart.
@@ -253,7 +232,6 @@ Good title:
 `[FEATURE]: tools 安装部署流程增加 agent -v 版本诊断日志`
 
 Good acceptance criteria:
-
 - [ ] install、upgrade、start、restart 固定流程会执行平台对应的 `agent -v` 诊断命令。
 - [ ] 诊断输出以 info 级别写入现有 installer 日志。
 - [ ] stdout/stderr 原始输出保留，不解析、不归一化、不持久化 `inner` / `ce`。

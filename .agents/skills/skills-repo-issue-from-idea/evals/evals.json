@@ -1,5 +1,5 @@
 {
-  "skill_name": "issue-from-idea",
+  "skill_name": "skills-repo-issue-from-idea",
   "evals": [
     {
       "id": 1,
@@ -35,6 +35,18 @@
         "Shows candidate scope and number; similarity alone does not authorize reuse",
         "Keeps umbrella or partial delivery non-closing",
         "Creation requires approval of the complete title/body/repository/labels draft"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "repository-local-not-product-skill",
+      "prompt": "为本 skills 仓库准备贡献流程，需要改哪个 skill？不要改变对外业务能力。",
+      "expected_output": "Uses the repository-local skill and current .github templates, without changing distributed skills or skills.sh.json.",
+      "expectations": [
+        "Scopes this workflow to infituit/skills maintenance",
+        "Distinguishes skills/ product content from .agents/skills/ maintainer workflows",
+        "Does not edit or depend on skills/create-github-pr or skills/issue-from-idea",
+        "Does not add repository-local skills to skills.sh.json groupings"
       ]
     }
   ]

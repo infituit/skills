@@ -1,28 +1,26 @@
 # Fallback PR Template
 
-Use this template only when the target repository has no PR or merge template. Fill only supported facts; keep authorization and pending publication actions outside the public body.
+Use this template only when the target repository has no PR or merge template.
 
 ```markdown
-## 变更摘要 / Summary
+## 概述
 
-- [做了什么、为什么，以及 reviewer 应关注的行为]
+[2-3 句概述变更内容和原因]
 
-## 测试结果 / Test Results
-
-- [实际执行的命令或场景、测试版本及结果]
-- [未执行的检查、原因与剩余验证范围；不把建议命令写成已通过]
-
-## 风险与回滚 / Risks and Rollback
-
-- 风险 / Risks: [兼容性、工作流或用户影响]
-- 回滚方案 / Rollback plan: [可执行的回滚或降级步骤]
-
-## 关联 Issue / Related Issues
+## 关联 Issue
 
 Related: #<issue-number>
 
-## 涉及范围 / Affected Areas
+## 变更内容
 
-- [实际受影响的组件、接口、配置、文档或 agent 行为]
-- [影响链路及已确认不变的边界；不适用则写 N/A]
+- [主要变更 1]
+- [主要变更 2]
+
+## 验证
+
+- [已执行或建议执行的验证]
+
+## 风险与影响
+
+- [兼容性、部署、回滚、用户影响；没有则写“无明显风险”]
 ```
