@@ -1,0 +1,65 @@
+{
+  "skill_name": "create-github-pr",
+  "evals": [
+    {
+      "id": 1,
+      "name": "tracking-issue-confirmed-before-reuse",
+      "prompt": "当前分支只改 skills 的 GitHub 模板。请准备 PR，先查找已有长期维护 Issue，能复用就不要新建，也不要关闭它。",
+      "expected_output": "Shows matching issue candidates and confirms the selected number before linking; prepares the repository-template draft without remote writes.",
+      "expectations": [
+        "Discovery is not automatic issue association approval",
+        "Uses refs or related to for a confirmed long-lived issue, not closes/fixes/resolves",
+        "Does not create a duplicate issue after a suitable issue is confirmed",
+        "Uses current repository PR fields and reports actual template validation evidence"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "replacement-current-template-historical-checks",
+      "prompt": "准备一个替代旧 PR 的草稿。旧正文只有 Summary/Changes/Motivation，旧测试没有在当前 HEAD 重跑。保留原 Issue、风险、回滚和 Replaces #42。",
+      "expected_output": "Migrates old facts into the current template, preserves the replacement relationship, and identifies historical checks rather than reporting them as current passes.",
+      "expectations": [
+        "Reads the current PR template rather than copying the old structure",
+        "Preserves issue links, risk, rollback, and Replaces #42",
+        "Does not claim historical CI or commits verify current HEAD",
+        "Does not close the old PR or edit metadata without separate approval"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "skill-template-verification-matrix",
+      "prompt": "这次同时改了 SKILL.md 的触发边界、references 中远程写确认步骤和 .github/ISSUE_TEMPLATE 的 dropdown。帮我准备 PR，列出完整影响范围与验证。",
+      "expected_output": "Maps trigger behavior, action authorization, and form options to targeted scenario, reference, and syntax checks without treating proposed checks as completed.",
+      "expectations": [
+        "Fills affected areas and concrete impact notes",
+        "Selects checks from actual repository scripts, evals, and form fields",
+        "Distinguishes actual results, historical evidence, and checks not run",
+        "Includes concrete risks and an executable rollback path"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "draft-only-with-unpublished-issue-and-head",
+      "prompt": "只准备 PR 草稿。当前 branch 没 push，也没有 Issue；不要创建或编辑任何 GitHub 资源。",
+      "expected_output": "Returns issue and PR drafts with unresolved identifiers, without pushing or creating resources to complete the draft.",
+      "expectations": [
+        "No git push, gh issue create/edit, gh pr create/edit, or metadata writes",
+        "Does not use gh pr create --dry-run as a no-write substitute",
+        "Reports No GitHub writes performed",
+        "Lists subsequent issue, push, and PR actions as requiring separate approval"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "ambiguous-create-failure-read-before-retry",
+      "prompt": "刚才 gh pr create 返回网络错误，没看到 URL。直接再创建一次吧。正文用那个包含代码和反引号的多行文件。",
+      "expected_output": "Inspects remote state before any retry, uses a confirmed body file, and reads back any created PR before proposing corrective writes.",
+      "expectations": [
+        "Avoids blind duplicate creation after an ambiguous failure",
+        "Uses --body-file for CLI or -F body=@file for raw API, not literal -f body=@file",
+        "Compares remote title/body/base/head and issue relation to the approved draft",
+        "Confirms a specific corrective edit if readback differs"
+      ]
+    }
+  ]
+}

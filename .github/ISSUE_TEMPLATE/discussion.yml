@@ -1,0 +1,68 @@
+name: 建议与讨论 / Discussion & Proposal
+description: 讨论尚未确定的设计或工作流方向 / Discuss unresolved design or workflow proposals
+title: "[IDEA] "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        欢迎提出想法和建议！提交前请搜索现有 issues，避免重复。
+        Ideas and proposals are welcome! Search existing issues before submitting to avoid duplicates.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: 提交前检查 / Pre-submission Checklist
+      options:
+        - label: 我已搜索现有 issues，此议题尚未被讨论 / I have searched existing issues and this topic has not been discussed
+          required: true
+
+  - type: dropdown
+    id: proposal_type
+    attributes:
+      label: 提案类型 / Proposal Type
+      multiple: true
+      options:
+        - 新 Skill 方向 / New Skill Direction
+        - Skill 边界与重叠 / Skill Boundaries and Overlap
+        - 工作流设计 / Workflow Design
+        - 工具与集成 / Tools and Integrations
+        - 文档与知识组织 / Documentation and Knowledge Organization
+        - 验证与质量 / Validation and Quality
+        - 其他讨论 / Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: background
+    attributes:
+      label: 背景与动机 / Background & Motivation
+      description: 当前有什么问题或局限，为什么值得讨论？/ What problem or limitation makes this worth discussing?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 提案描述 / Proposal Description
+      description: 描述建议、需要决定的问题及主要权衡 / Describe the proposal, the decision needed, and the main tradeoffs
+    validations:
+      required: true
+
+  - type: textarea
+    id: benefits
+    attributes:
+      label: 预期收益 / Expected Benefits
+      description: 该改变将解决什么问题，如何判断是否有效？/ What would this solve, and how would success be assessed?
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: 可能的实现方式 / Possible Implementation
+      description: 可选的初步思路、影响范围或验证方法 / Optional initial approach, affected scope, or validation method
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 附加信息 / Additional Context
+      description: 相关资料、已有讨论或示例 / References, existing discussions, or examples

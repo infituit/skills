@@ -1,0 +1,41 @@
+{
+  "skill_name": "issue-from-idea",
+  "evals": [
+    {
+      "id": 1,
+      "name": "yaml-form-contract-no-invented-checks",
+      "prompt": "帮我整理一个 skill 偶发不触发的 Bug issue。用仓库 YAML 表单；我还没有稳定复现，也没提供客户端版本。先不要创建。",
+      "expected_output": "Uses the bug form's title prefix, labels, headings, and dropdown options; asks only for material missing facts and never fabricates reproduction or environment details.",
+      "expectations": [
+        "Reads issue forms and config.yml before drafting",
+        "Renders form input labels as Markdown headings in field order",
+        "Does not check unsupported checklist items or invent version/log facts",
+        "Separates author-facing questions from the issue body and performs no writes"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "discussion-vs-feature-and-label-mismatch",
+      "prompt": "我们还没决定是合并两个 skills 还是拆分触发边界，帮我写 issue。表单里的默认 label 在远端不存在。",
+      "expected_output": "Selects the discussion/proposal form for an unresolved decision and reports the label mismatch without creating or substituting labels automatically.",
+      "expectations": [
+        "Does not present the unresolved design as an approved feature implementation",
+        "Follows the selected form's title prefix and fields",
+        "Asks before creating or substituting a missing label",
+        "Does not bypass disabled blank issues with a generic body"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "duplicate-tracking-issue-confirmation",
+      "prompt": "这个模板维护需求帮我落成 issue；如果已有长期 issue 能覆盖，先告诉我，不要重复创建。",
+      "expected_output": "Searches concrete behavior and scope, presents a candidate tracking issue for confirmation, and does not create or associate anything automatically.",
+      "expectations": [
+        "Searches existing issues before offering creation",
+        "Shows candidate scope and number; similarity alone does not authorize reuse",
+        "Keeps umbrella or partial delivery non-closing",
+        "Creation requires approval of the complete title/body/repository/labels draft"
+      ]
+    }
+  ]
+}

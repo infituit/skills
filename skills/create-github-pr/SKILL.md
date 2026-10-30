@@ -1,12 +1,21 @@
 ---
 name: create-github-pr
 description: >-
-  Use when creating a GitHub pull request for the current branch. Handles the complete workflow: resolve the canonical upstream and fresh base branch, analyze changes, require an associated issue, create an issue when no explicit issue number is available, read repository PR conventions, push the branch to an appropriate writable remote with confirmation, and create a PR that follows project standards. Trigger when the user says "create PR", "submit pull request", "open a pull request", "准备合并", "提交 PR", or mentions merging the current branch.
+  Use when preparing, creating, updating, or replacing a GitHub pull request for the current branch. Handles the complete workflow: resolve the canonical upstream and fresh base branch, analyze changes, require an associated issue, create an issue when no explicit issue number is available, read repository PR conventions, push the branch to an appropriate writable remote with confirmation, and create a PR that follows project standards. Trigger when the user says "create PR", "submit pull request", "open a pull request", "准备合并", "提交 PR", or mentions merging the current branch.
 ---
 
 # Create GitHub PR
 
-Create a GitHub pull request for the current branch while respecting repository conventions and requiring human confirmation before remote-changing actions.
+Prepare or create a GitHub pull request for the current branch while respecting repository conventions and requiring human confirmation before remote-changing actions.
+
+## Operating Modes
+
+- **Preflight**: for “准备 PR”, “draft”, or ambiguous intent, read local and remote metadata and return a complete draft without pushing or changing GitHub resources.
+- **Create**: draft first, then confirm issue creation, branch push, and PR creation separately.
+- **Update or replacement**: when explicitly requested, read the existing PR and use `references/pr-delivery-safety.md` to migrate its facts into the current template and confirm each edit. This does not authorize rewriting branches or closing the old PR.
+- **Split**: use the existing split workflow only when requested or accepted; planning is not execution approval.
+
+Draft approval does not authorize label, assignee, reviewer, or milestone changes. Use `references/pr-delivery-safety.md` for verification evidence, issue relations, readback, and retry safety.
 
 ## Core Rules
 
@@ -14,7 +23,7 @@ Create a GitHub pull request for the current branch while respecting repository 
 - Prefer explicit issue numbers only. Do not semantically guess a related issue from keywords.
 - If the user gives an issue number in the current request, verify it and use it.
 - If an issue number is found only in branch names, commit messages, or existing PR metadata, show it to the user and ask before using it.
-- If there is no confirmed issue number, draft and create a new issue before drafting the PR.
+- If there is no confirmed issue number, draft a new issue. Preflight may return both drafts with an unresolved issue placeholder; create mode must create or confirm an issue before creating the PR.
 - Do not hard-code repository names, default branches, owners, forks, labels, title formats, or languages except as fallback behavior documented below.
 - The PR comparison base and PR target base must be the same freshly fetched canonical upstream branch.
 - Default issue and PR body language is Chinese unless the user or repository conventions clearly require another language.
@@ -23,7 +32,7 @@ Create a GitHub pull request for the current branch while respecting repository 
 
 ## When to Use
 
-Use this skill when the user wants to create, open, submit, or prepare a pull request for the current branch.
+Use this skill when the user wants to create, open, submit, prepare, update, or replace a pull request for the current branch.
 
 Common prompts:
 
@@ -47,21 +56,23 @@ Automatic:
 - Verify issue existence and repository metadata.
 - Draft issue and PR content.
 
+In preflight, stop at drafts even if the issue or head branch is not published. A fetch may update local remote-tracking refs; if the user forbids local changes or network refresh, use the existing ref and explicitly report that its freshness is unverified.
+
 Must confirm:
 
 - Using issue numbers inferred from git context rather than the user's current request.
 - Creating a new issue.
 - Pushing a branch to any remote.
 - Any `--force-with-lease` push. Never force push without a separate explicit confirmation.
-- Creating the PR.
+- Creating or editing the PR, and each issue edit or metadata change requested separately.
 
 ## Workflow
 
 1. Resolve repository, canonical upstream, and base branch.
 2. Analyze the current branch against the freshly fetched base.
 3. Resolve the required issue association.
-4. Create a new issue when no confirmed issue exists.
-5. Read PR conventions and draft the PR.
+4. Draft a new issue when no confirmed issue exists; create it only after the create-mode confirmation.
+5. Read PR conventions and draft the PR; finish here in preflight mode.
 6. Ensure the branch is pushed to an appropriate writable head remote.
 7. Create the PR after confirmation.
 8. Verify and report the created issue and PR.
@@ -131,8 +142,8 @@ Rules:
 1. If the user provided issue numbers in the current request, verify them and use them without an extra issue-selection checkpoint.
 2. If issue numbers are inferred from git context, show the numbers and source snippets, then ask whether to use them.
 3. If multiple issue numbers are found, ask which one or more should be linked.
-4. If no issue number is confirmed, proceed to new issue creation.
-5. Do not run semantic issue search and do not bind an issue only because the title or labels look related.
+4. If no issue number is confirmed, draft a new issue; create it only in create mode after confirmation.
+5. Do not run semantic issue search or bind an issue only because its title or labels look related. If the user asks to find an existing or long-lived tracking issue, show candidates and confirm the selected number before linking; discovery alone is not association approval.
 
 Verify issue numbers:
 
@@ -140,7 +151,7 @@ Verify issue numbers:
 gh issue view <issue-number> --repo <canonical-owner>/<repo> --json number,title,state,labels,url
 ```
 
-If the issue does not exist or is not usable, explain the problem and create a new issue unless the user supplies another issue number.
+If the issue does not exist or is not usable, explain the problem and ask for another number or draft a new issue. Preflight never creates it; create mode still requires confirmation.
 
 ## Step 3: Create Issue When Needed
 
@@ -158,8 +169,9 @@ Template rules:
 2. Preserve template `title`, `labels`, and field order.
 3. If exactly one template clearly matches the change type, use it.
 4. If multiple templates may match, recommend one in the confirmation checkpoint and let the user change it.
-5. If no template exists, or blank issues are allowed, use the fallback issue structure.
+5. Use the fallback issue structure only when no applicable template exists and the repository allows it; blank issues being enabled does not override a matching template.
 6. If blank issues are disabled and no template can be reliably selected, ask the user to choose a template.
+7. For YAML forms, render input labels as Markdown headings in field order, retain dropdown values and required fields, and never invent checklist confirmations, reproduction, environment, or logs. Verify labels exist; do not create missing labels without authorization.
 
 Default issue language is Chinese unless repository templates or user instructions require another language. Keep code identifiers, package names, labels, and technical keywords in English where natural.
 
@@ -187,7 +199,7 @@ Fallback issue body:
 
 ### Issue Confirmation
 
-Before creating the issue, present:
+In preflight, return the issue draft without creating it. In create mode, before creating the issue, present:
 
 ```text
 I'll create an issue with:
@@ -209,7 +221,7 @@ After confirmation, create it:
 gh issue create \
   --repo <owner/repo> \
   --title "<title>" \
-  --body "<body>" \
+  --body-file <confirmed-body-file> \
   --label "<label1>" \
   --label "<label2>"
 ```
@@ -220,7 +232,7 @@ Immediately verify it:
 gh issue view <issue-number> --repo <owner/repo> --json number,title,body,labels,state,url
 ```
 
-If created content differs from the confirmed draft, update the issue before continuing.
+If created content differs from the confirmed draft, pause, show the difference, and confirm the specific edit before correcting and verifying again.
 
 ## Step 4: Read PR Conventions
 
@@ -279,6 +291,8 @@ Body rules:
 3. Use a closing keyword such as `closes #<issue-number>` only when the PR base is the default branch and the user explicitly confirms they want the issue closed when the PR merges.
 4. If the template has an issue-closing field but auto-close is not confirmed, fill it with a non-closing issue reference instead of `closes` or `fixes`.
 5. If no repository PR template exists, use the skill fallback PR body in `references/fallback-pr-template.md`.
+6. Apply `references/pr-delivery-safety.md`: map affected areas to actual checks, separate current-HEAD results from historical evidence, and include risks and executable rollback. For update/replacement work, preserve old context but use the current template.
+7. Long-lived, umbrella, or partial-delivery issues stay non-closing even when another issue is fully completed. Repository issue-closing rules and explicit confirmation must both be satisfied.
 
 Fallback PR body: `references/fallback-pr-template.md`
 
@@ -352,7 +366,7 @@ gh pr create \
   --base <base-branch> \
   --head <head-owner>:<branch-name> \
   --title "<title>" \
-  --body "<body>"
+  --body-file <confirmed-body-file>
 ```
 
 If `gh pr create` cannot express the fork workflow reliably, use the GitHub API:
@@ -362,7 +376,7 @@ gh api repos/<canonical-owner>/<repo>/pulls --method POST \
   -f title="<title>" \
   -f head="<head-owner>:<branch-name>" \
   -f base="<base-branch>" \
-  -f body="<body>" \
+  -F body=@<confirmed-body-file> \
   --jq '.html_url'
 ```
 
@@ -413,11 +427,11 @@ Stop PR drafting, fetch the intended base, re-run diff analysis, and regenerate 
 
 ### Missing templates
 
-Use fallback Chinese issue or PR body only when repository templates do not exist or blank content is allowed.
+Use the fallback PR body only when no repository PR template exists. Use the fallback issue body only when no applicable issue template exists and repository rules allow it; blank issues being enabled does not override a matching template.
 
 ## Final Report
 
-After success, report:
+For preflight or update/replacement work, use the mode-specific delivery report in `references/pr-delivery-safety.md`; never claim a draft was created on GitHub. After successful PR creation, report:
 
 ```text
 PR created successfully.
