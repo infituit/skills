@@ -1,0 +1,84 @@
+name: Bug 报告 / Bug Report
+description: 报告 skill、模板或配置中的问题 / Report a problem with a skill, template, or configuration
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        提交前请搜索现有 issues，避免重复。请勿提交凭证、个人信息或未脱敏的会话记录。
+        Search existing issues before submitting. Do not include credentials, personal data, or unredacted session transcripts.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: 提交前检查 / Pre-submission Checklist
+      options:
+        - label: 我已搜索现有 issues，此问题尚未被报告 / I have searched existing issues and this problem has not been reported
+          required: true
+        - label: 我已阅读相关 SKILL.md 或项目文档 / I have read the relevant SKILL.md or project documentation
+          required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 问题描述 / Problem Description
+      description: 描述实际行为，并提供可用的复现步骤；偶发问题请说明发生条件 / Describe actual behavior and available reproduction steps; for intermittent issues, describe the conditions
+      placeholder: |
+        - Skill 名称或文件路径 / Skill name or file path:
+        - 输入或操作步骤 / Input or steps:
+        - 实际结果 / Actual result:
+        - 发生频率 / Frequency:
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为 / Expected Behavior
+      description: 描述你期望的正常行为 / Describe what you expected to happen
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: 涉及组件 / Affected Component
+      options:
+        - Skill 触发与元数据 / Skill Triggers and Metadata
+        - Skill 执行流程 / Skill Workflow
+        - 配套脚本与工具 / Supporting Scripts and Tools
+        - Evals 与验证场景 / Evals and Verification Scenarios
+        - GitHub 模板或配置 / GitHub Templates or Configuration
+        - skills.sh 分组与分发 / skills.sh Grouping and Distribution
+        - 文档 / Documentation
+        - 其他 / Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境信息 / Environment
+      description: 填写相关信息，不适用项写 N/A / Provide relevant details; use N/A for inapplicable items
+      value: |
+        - 仓库 commit 或 skill 版本 / Repository commit or skill version:
+        - Agent 客户端及版本 / Agent client and version:
+        - 模型 / Model:
+        - 操作系统 / OS:
+        - 安装方式 / Installation method:
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 相关日志 / Relevant Logs
+      description: 仅提供脱敏后的错误输出或最小会话片段 / Provide only redacted error output or a minimal conversation excerpt
+      render: text
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 附加信息 / Additional Context
+      description: 相关截图、链接或其他定位线索 / Relevant screenshots, links, or other diagnostic context
