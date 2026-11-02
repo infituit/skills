@@ -1,0 +1,52 @@
+{
+  "skill_name": "golang-code-quality",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Review a Go prepare(ctx, items []*Deployment) function for a bounded request. Each item has TenantID, HostID, Package, Generation, Platform and Version. In one loop it reads the host, lazily fills a plugin map, resolves empty versions using a default-version map, queries releases on cache misses, then writes Version and Compatible to the item. The request is small enough to hold in memory; existing tenant-scoped APIs can batch-read hosts and plugins, but default-version and release APIs only support single-key reads. Do not invent new APIs or concurrency. Suggest a concrete clearer structure and compare time, auxiliary space and dependency-call counts. Would fewer loops necessarily be better? Include error/side-effect considerations. Do not edit repository code.",
+      "expected_output": "Proposes bounded, dependency-ordered phases using existing APIs and complete keys, with a final assembly loop free of I/O or cache filling. Retains per-item version/compatibility decisions. Separates O(N) processing from unique dependency calls and accounts for extra memory and semantic changes.",
+      "files": [],
+      "expectations": [
+        "Proposes gathering keys, loading dependencies in order, and a final I/O-free assembly phase rather than lazy cache filling in assembly.",
+        "Resolves default versions before forming complete release keys, preserving explicit versions and tenant/package/generation/platform/version identity.",
+        "States that a fixed number of linear passes remains O(N), expresses calls using distinct dependency-key counts, distinguishes helper calls from underlying network traffic, and accounts for added maps.",
+        "Uses existing batch APIs and unique-key single calls without proposing concurrency, a new batch API or a generic framework.",
+        "Flags changed first-error, read-snapshot or partial-mutation behavior rather than asserting automatic semantic equivalence."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "A Go worker consumes an unbounded channel of jobs under a strict memory limit. Each job reads account state, charges the account, then the next job for that account must observe the completed charge. A proposed readability refactor collects all jobs, preloads account snapshots, and finally loops to write results: three flat loops instead of one mixed loop. Decide whether to accept it and give the smallest safe alternative. Do not edit repository code.",
+      "expected_output": "Rejects unbounded prefetch and stale snapshots; keeps ordered processing or explicitly bounded chunks only where dependencies permit. Does not treat flat loops or phased preparation as universally superior.",
+      "files": [],
+      "expectations": [
+        "Rejects collecting the unbounded stream and explains its memory or termination problem.",
+        "Preserves read-after-write ordering for repeated accounts instead of using preloaded stale snapshots.",
+        "Recommends a small safe sequential structure or bounded processing only with explicit dependency constraints, not a new framework."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "In an existing Go bulk endpoint, input order defines behavior: each item is validated, its metadata is read, and it is immediately persisted before the next item. If item 3 fails, writes for items 1 and 2 remain, and the first error encountered in input order is returned. Someone proposes loading and validating metadata for all items before one final write loop, saying both versions are O(N), so this is a harmless readability improvement. Assess it and describe what you would change under authorization for behavior-preserving cleanup only. Do not edit repository code.",
+      "expected_output": "Explains that prefetch changes partial progress and can change error ordering, rejects silent adoption, and preserves per-item sequencing under current authorization. Any alternative contract needs explicit approval; equal Big-O is not a latency proof.",
+      "files": [],
+      "expectations": [
+        "Identifies the lost partial progress from whole-request prefetch and checks whether first-error ordering changes, rather than assuming it must change.",
+        "Keeps existing per-item semantics under behavior-preserving authorization rather than implementing the phased rewrite.",
+        "Does not infer equal latency or performance improvement merely from equal O(N)."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Write a concrete, self-contained Go implementation, not a review or pseudocode. Use package prep and only standard-library imports. Given: type Item struct { HostID int64; Plugin, Version string; Compatible bool }; type Host struct { Generation, Platform string }; type Plugin struct { Package string }; type DefaultKey struct { Package, Generation, Platform string }; type ReleaseKey struct { DefaultKey; Version string }; type Release struct { Conflict bool }; type Store interface { Hosts(context.Context, []int64) (map[int64]Host, error); Plugins(context.Context, []string) (map[string]Plugin, error); DefaultVersion(context.Context, DefaultKey) (string, error); Release(context.Context, ReleaseKey) (Release, error) }. Implement Prepare(ctx context.Context, store Store, items []Item) ([]Item, error). Input is bounded and tenant scope is fixed by store. Hosts/Plugins each accept the entire batch and must not receive empty keys; absent returned entries are errors. Calls are reusable in this invocation, no write depends on another item, and dependency-phase errors are allowed. Explicit versions override defaults. Output is in input order, must not modify the input backing array, and on failure returns no results. For each item output Compatible = item.Compatible && !release.Conflict. Reuse dependencies; finish with a result assembly phase containing no dependency calls or lazy cache fills. No new interfaces, goroutines, framework or cross-call cache. Return code and a short complexity/call-count explanation; do not edit repository business files.",
+      "expected_output": "Compilable Go using supplied types and Store API, staged tenant-scoped batch reads, unique defaults then complete releases, missing-entry errors, and I/O-free ordered assembly into fresh output. Preserves explicit versions and per-item compatibility; reports linear work and distinct-key calls without invented latency gains.",
+      "files": [],
+      "expectations": [
+        "Produces concrete Go code using the supplied interface, existing full-batch reads, distinct single-key dependency calls, and no extra concurrency or framework.",
+        "Loads defaults before complete releases, preserves explicit versions, handles missing host/plugin entries and avoids empty batch API calls.",
+        "Final assembly uses prepared lookups only, preserves input order and compatibility semantics, and writes to fresh output without mutating input.",
+        "Explains linear processing and additional memory separately from dependency-call counts, without unsupported latency claims."
+      ]
+    }
+  ]
+}
